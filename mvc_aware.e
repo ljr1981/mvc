@@ -6,6 +6,8 @@ note
 			"name=alex_design_document"
 	EIS: "src=https://github.com/kwaxer/handle/wiki",
 			"name=alex_mvc_wiki"
+	EIS: "src=https://github.com/ljr1981/mvc/",
+			"name=ljr1981_github_library"
 
 deferred class
 	MVC_AWARE [W -> EV_WIDGET, MD -> ANY, VD -> ANY]
