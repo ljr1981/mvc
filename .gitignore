@@ -1,3 +1,7 @@
+# Eiffel
+EIFGENs
+tests\html_outs\
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -45,3 +49,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+px.png
+px_dump.txt
+px.svg
+px.txt
+graph_test.png
+graph_test.svg
+graph_test.txt
+graph_test_csv.png
+graph_test_csv.svg
+graph_test_csv.txt
+tests/html_outs/
+tests/html_outs/editable_html_example.html
+tests/html_outs/est_area_table.html
+tests/html_outs/est_project_table.html
+tests/html_outs/est_spec_table.html
+tests/html_outs/est_task_table.html
