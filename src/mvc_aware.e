@@ -11,7 +11,7 @@ deferred class
 
 inherit
 	MVC_ANY
-	
+
 feature {NONE} -- Initialization
 
 	make_with_widget (a_widget: W)
@@ -28,10 +28,15 @@ feature -- Future
 	-- features for common conversions (from model to view-reaady back to model)
 	-- features for common validation (model data validation, not view data)
 
-feature -- Access
+feature -- Access: Widget
 
 	widget: detachable W
 			-- The `widget' operating as the "View".
+
+feature -- Access: Getter-Setter
+
+	model_getter_agent: detachable FUNCTION [MD]
+			-- Gets MD model data from model for view.
 
 	model_setter_agent: detachable PROCEDURE [MD]
 			-- Sets MD model data from view to the model.
@@ -40,24 +45,27 @@ feature -- Access
 			-- A call to a model PROCEDURE that resets
 			--	the model attribute to a reasonable default.
 
-	model_getter_agent: detachable FUNCTION [MD]
-			-- Gets MD model data from model for view.
-
-	model_to_view_data_converter_agent: detachable FUNCTION [TUPLE [MD], VD]
-			-- Converts MD model data to VD view-ready data
-			--  This is a specialized converter.
-			-- 	There are common converters based on MD:VD type pairs
+feature -- Access: Converters
 
 	view_to_model_data_converter_agent: detachable FUNCTION [TUPLE [VD], MD]
 			-- Converts VD view data to MD model-ready data
 			--  This is a specialized converter.
 			-- 	There are common converters based on MD:VD type pairs
 
+	model_to_view_data_converter_agent: detachable FUNCTION [TUPLE [MD], VD]
+			-- Converts MD model data to VD view-ready data
+			--  This is a specialized converter.
+			-- 	There are common converters based on MD:VD type pairs
+
+feature -- Access: Masking
+
 	unmasking_agent: detachable PROCEDURE
 			-- Unmasks data of `widget'.
 
 	masking_agent: detachable PROCEDURE
 			-- Masks data of `widget'.
+
+feature -- Access: Validation
 
 	model_data_validator_agent: detachable FUNCTION [TUPLE [MD], BOOLEAN]
 			-- Responsible for ensuring data passed to or from
