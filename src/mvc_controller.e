@@ -2,6 +2,9 @@ note
 	description: "[
 		Abstract notion of something that is MVC_AWARE.
 		]"
+	design: "[
+		See end-of-class notes.
+		]"
 
 class
 	MVC_CONTROLLER [P -> EV_PRIMITIVE, MD -> ANY, VD -> ANY]
@@ -15,7 +18,7 @@ inherit
 create
 	default_create,
 	make_with_widget
-	
+
 feature {NONE} -- Initialization
 
 	make_with_widget (a_widget: P)
@@ -148,6 +151,94 @@ feature -- Settings
 		ensure
 			model_data_validator_agent_set: model_data_validator_agent = a_model_data_validator_agent
 		end
+note
+	design: "[
+		This class represents a Controller for a single Model (object) + View (object).
+		
+		The goal of this class is to facilitate the movement of data back and
+		forth between the Model and the View.
+		
+		Assume:
+		-------
+		1. We can have a Controller without a defined Model or View.
+			The Controller is not useful until the Model and View are
+			defined (e.g. we have a GUI View control and Model agents).
+		2. A View consists of a single EV_PRIMITIVE GUI element.
+		3. A Model consists of the Controller agents.
+		
+		BNF:
+		----
+		Controller ::=
+			[View_object]
+			[Model_agents]
+			[Validator_agents]
+			[Converter_agents]
+			[Masking_agents]
+			
+		Model_agents ::=
+			Model_getter_agent
+			Model_setter_agent
+			Model_reasonable_default_agent
+			
+		Validator_agents ::=
+			Model_validator_agent
+			
+		Converter_agents ::=
+			Model_to_view_converter_agent
+			View_to_model_converter_agent
+			
+		Masking_agents ::=
+			Masking_agent
+			Unmasking_agent
+			
+		Workflow:
+		=========
+		This class is designed for one or more workflows (use cases).
+		
+		Workflow: Model-to-View:
+		------------------------
+		Move data from the Model to the View when triggered to do so.
+		
+		1. GET (required): Execute the Model_getter_agent as a Query routine, whose Result
+			is the attribute object reference (e.g. could be a base type
+			like STRING, BOOLEAN, REAL, DECIMAL, and so on).
+		
+		2. VALIDATION (optionally): Determine if the Model data result is valid or invalid. Set a
+			`is_valid' flag accordingly. The purpose of this flag is to
+			instruct the surrounding system that the data is valid or invalid
+			so it can make a proper presentation to the user somewhere in
+			the GUI.
+			
+		3. CONVERSION (optionally): Convert the Model data result to a View-usable form.
+		
+		4. MASK (optionally): Appy any data masking to the Model data result.
+		
+		5. RENDER (required): Render the masked Model data result in the View.
+		
+		Workflow: View-to-Model:
+		------------------------
+		Move data from the View to the Model when triggered to do so.
+		
+		1. UNRENDER (required): Fetch the data from the View, bringing it into
+			the Controller for processing.
+		
+		2. UNMASK (optionally): Remove masking transforms from View data, reconstituting
+			an unmasked version of the data.
+			
+		3. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
+		
+		4. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
+			Note that for GUI-level validation, one might stop here (e.g. not complete
+			the final step of sending the data back to the Model).
+			
+		5. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
+			execute the Model_setter_agent as a Procedure routine taking one argument (i.e.
+			the raw Model data value).
+			
+		NOTE: The successive agents operate as a "chain", passing the data down each agent
+				as one would move a product along an assembly line.
+				
+		]"
 
 end
 
