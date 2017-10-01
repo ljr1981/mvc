@@ -181,7 +181,7 @@ note
 			Model_reasonable_default_agent
 			
 		Validator_agents ::=
-			Model_validator_agent
+			Model_data_validator_agent
 			
 		Converter_agents ::=
 			Model_to_view_converter_agent
