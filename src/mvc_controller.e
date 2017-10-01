@@ -7,7 +7,7 @@ note
 		]"
 
 class
-	MVC_CONTROLLER [P -> EV_PRIMITIVE, MD -> ANY, VD -> ANY]
+	MVC_CONTROLLER [P -> EV_PRIMITIVE, MD -> detachable ANY, VD -> ANY]
 			-- P = Type of Primitive widget
 			-- MD = Model-data type
 			-- VD = View-data type (implies conversion from MD<-->VD)
@@ -16,15 +16,16 @@ inherit
 	MVC_ANY
 
 create
-	default_create,
 	make_with_widget
 
 feature {NONE} -- Initialization
 
-	make_with_widget (a_widget: P)
+	make_with_widget (a_widget: P; a_widget_setter_agent: like view_setter_agent; a_widget_getter_agent: like view_getter_agent)
 			-- `make_with_widget' `a_widget'.
 		do
 			widget := a_widget
+			view_setter_agent := a_widget_setter_agent
+			view_getter_agent := a_widget_getter_agent
 		ensure
 			set: widget ~ a_widget
 		end
@@ -40,17 +41,94 @@ feature -- Access: Widget
 	widget: detachable P
 			-- The `widget' operating as the "View".
 
+feature -- Ops
+
+	model_to_view
+			-- Move data from Model to View.
+			-- See end-of-class notes: Workflow: Model-to-View.
+		local
+			l_data: MD
+			l_converted_data,
+			l_masked_data: VD
+		do
+				-- 1. GET
+			attached_model_getter_agent.call (Void)
+			l_data := attached_model_getter_agent.last_result
+
+				-- 2. VALIDATION (optional and always True (valid) when no validator)
+			if attached model_data_validator_agent as al_agent then
+				al_agent.call (l_data)
+				is_valid := al_agent.last_result
+			else
+				is_valid := True
+			end
+
+				-- 3. CONVERSION (optional with possible pass-through)
+			if
+				attached model_to_view_data_converter_agent as al_converter_agent and then
+					attached l_data as al_data
+			then
+				al_converter_agent.call ([al_data])
+				check has_converted_data: attached al_converter_agent.last_result as al_converted_result then
+					l_converted_data := al_converted_result
+				end
+			else
+				check attached {VD} l_data as al_passthrough_converted_data then
+					l_converted_data := al_passthrough_converted_data -- pass-through
+				end
+			end
+			check has_converted_data: attached l_converted_data end
+
+				-- 4. MASK (optional with possible pass-through)
+			l_masked_data := l_converted_data -- pass-through
+			if attached masking_agent as al_agent then
+				al_agent.call ([l_converted_data])
+				if attached al_agent.last_result as al_masked_result then
+					l_masked_data := al_masked_result
+				end
+			end
+			check has_masked_data: attached l_masked_data end
+
+				-- 5. RENDER
+			view_setter_agent.call (l_masked_data)
+		end
+
+	is_valid: BOOLEAN
+
+	can_take_invalid_data: BOOLEAN
+
 feature -- Access: Getter-Setter
 
 	model_getter_agent: detachable FUNCTION [MD]
 			-- Gets MD model data from model for view.
 
+	attached_model_getter_agent: attached like model_getter_agent
+		do
+			check has_agent: attached model_getter_agent as al_agent then
+				Result := al_agent
+			end
+		end
+
 	model_setter_agent: detachable PROCEDURE [MD]
 			-- Sets MD model data from view to the model.
+
+	attached_model_setter_agent: attached like model_setter_agent
+		do
+			check has_agent: attached model_setter_agent as al_agent then
+				Result := al_agent
+			end
+		end
 
 	model_to_reasonable_default_agent: detachable PROCEDURE
 			-- A call to a model PROCEDURE that resets
 			--	the model attribute to a reasonable default.
+
+	attached_model_to_reasonable_default_agent: attached like model_to_reasonable_default_agent
+		do
+			check has_agent: attached model_to_reasonable_default_agent as al_agent then
+				Result := al_agent
+			end
+		end
 
 feature -- Access: Converters
 
@@ -59,24 +137,46 @@ feature -- Access: Converters
 			--  This is a specialized converter.
 			-- 	There are common converters based on MD:VD type pairs
 
+	attached_view_to_model_data_converter_agent: attached like view_to_model_data_converter_agent
+		do
+			check has_agent: attached view_to_model_data_converter_agent as al_agent then
+				Result := al_agent
+			end
+		end
+
 	model_to_view_data_converter_agent: detachable FUNCTION [TUPLE [MD], VD]
 			-- Converts MD model data to VD view-ready data
 			--  This is a specialized converter.
 			-- 	There are common converters based on MD:VD type pairs
+
+	attached_model_to_view_data_converter_agent: attached like model_to_view_data_converter_agent
+		do
+			check has_agent: attached model_to_view_data_converter_agent as al_agent then
+				Result := al_agent
+			end
+		end
 
 feature -- Access: Masking
 
 	unmasking_agent: detachable PROCEDURE
 			-- Unmasks data of `widget'.
 
-	masking_agent: detachable PROCEDURE
+	masking_agent: detachable FUNCTION [TUPLE [VD], VD]
 			-- Masks data of `widget'.
 
 feature -- Access: Validation
 
-	model_data_validator_agent: detachable FUNCTION [TUPLE [MD], BOOLEAN]
+	model_data_validator_agent: detachable PREDICATE
 			-- Responsible for ensuring data passed to or from
 			-- model is valid before getting or setting.
+
+feature -- Access: View-setter
+
+	view_setter_agent: PROCEDURE
+			-- Sets data on to the View-object (widget).
+
+	view_getter_agent: FUNCTION [VD]
+			-- Gets data from the View-object (widget).
 
 feature -- Settings
 
@@ -237,7 +337,7 @@ note
 			
 		NOTE: The successive agents operate as a "chain", passing the data down each agent
 				as one would move a product along an assembly line.
-				
+
 		]"
 
 end
