@@ -26,11 +26,10 @@ feature -- Test routines
 	MVC_tests
 			-- `MVC_tests'
 		local
-			l_aware: MVC_AWARE [EV_WIDGET, ANY, ANY]
-			l_container: MVC_CONTAINER [EV_CONTAINER, ANY, ANY]
-			l_prim: MVC_PRIMITIVE [EV_PRIMITIVE, ANY, ANY]
+			l_aware: MVC_CONTROLLER [EV_PRIMITIVE, ANY, ANY]
 		do
-			do_nothing -- yet ...
+			create l_aware.default_create
+			create l_aware.make_with_widget (create {EV_LABEL}.make_with_text ("blah"))
 		end
 
 end

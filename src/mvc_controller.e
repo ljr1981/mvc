@@ -3,18 +3,22 @@ note
 		Abstract notion of something that is MVC_AWARE.
 		]"
 
-deferred class
-	MVC_AWARE [W -> EV_WIDGET, MD -> ANY, VD -> ANY]
-			-- W = Type of widget
+class
+	MVC_CONTROLLER [P -> EV_PRIMITIVE, MD -> ANY, VD -> ANY]
+			-- P = Type of Primitive widget
 			-- MD = Model-data type
 			-- VD = View-data type (implies conversion from MD<-->VD)
 
 inherit
 	MVC_ANY
 
+create
+	default_create,
+	make_with_widget
+	
 feature {NONE} -- Initialization
 
-	make_with_widget (a_widget: W)
+	make_with_widget (a_widget: P)
 			-- `make_with_widget' `a_widget'.
 		do
 			widget := a_widget
@@ -30,7 +34,7 @@ feature -- Future
 
 feature -- Access: Widget
 
-	widget: detachable W
+	widget: detachable P
 			-- The `widget' operating as the "View".
 
 feature -- Access: Getter-Setter
