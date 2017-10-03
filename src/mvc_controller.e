@@ -93,6 +93,54 @@ feature -- Ops
 			view_setter_agent.call (l_masked_data)
 		end
 
+	view_to_model
+		local
+			l_view_data: VD
+			l_unmasked_data: VD
+			l_converted_data: MD
+		do
+				--	1. UNRENDER (required): Fetch the data from the View, bringing it into
+			view_getter_agent.call ([Void])
+			check has_view_data: attached view_getter_agent.last_result as al_view_data then
+				l_view_data := al_view_data
+			end
+				--	2. UNMASK (optionally): Remove masking transforms from View data, reconstituting
+			if attached unmasking_agent as al_agent then
+				al_agent.call ([l_view_data])
+				check has_unmasked_result: attached al_agent.last_result as al_unmasked_result then
+					l_unmasked_data := al_unmasked_result
+				end
+			else
+				l_unmasked_data := l_view_data
+			end
+				--	3. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
+			if attached view_to_model_data_converter_agent as al_converter_agent then
+				al_converter_agent.call ([l_unmasked_data])
+				check has_converted_data: attached al_converter_agent.last_result as al_converted_data then
+					l_converted_data := al_converted_data
+				end
+			else
+				check same: attached {MD} l_view_data as al_converted_data then
+					l_converted_data := al_converted_data
+				end
+			end
+				--	4. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
+			if attached  model_data_validator_agent as al_validator_agent then
+				al_validator_agent.call ([l_converted_data])
+				check attached al_validator_agent.last_result as al_validator_result then
+					is_valid := al_validator_result
+				end
+			else
+				is_valid := True
+			end
+				--	5. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
+			if is_valid then
+				check has_setter: attached model_setter_agent as al_setter_agent then
+					al_setter_agent.call ([l_converted_data])
+				end
+			end
+		end
+
 	is_valid: BOOLEAN
 
 	can_take_invalid_data: BOOLEAN
@@ -158,7 +206,7 @@ feature -- Access: Converters
 
 feature -- Access: Masking
 
-	unmasking_agent: detachable PROCEDURE
+	unmasking_agent: detachable FUNCTION [TUPLE [VD], VD]
 			-- Unmasks data of `widget'.
 
 	masking_agent: detachable FUNCTION [TUPLE [VD], VD]
