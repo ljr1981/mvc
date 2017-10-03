@@ -23,8 +23,8 @@ inherit
 
 feature -- Test routines
 
-	mvc_label_string_32_tests
-			-- `mvc_label_string_32_tests'
+	mvc_label_string_32_model_to_view_tests
+			-- `mvc_label_string_32_model_to_view_tests'
 		local
 			l_aware: MVC_CONTROLLER [EV_LABEL, STRING_32, STRING_32]
 			l_label: EV_LABEL
@@ -44,6 +44,27 @@ feature -- Test routines
 
 				-- Test: Label text
 			assert_strings_equal ("has_default_text", l_label.text, mock_object_one.mock_string_32)
+		end
+
+	mvc_label_string_32_view_to_model_tests
+		local
+			l_aware: MVC_CONTROLLER [EV_LABEL, STRING_32, STRING_32]
+			l_label: EV_LABEL
+		do
+				-- Workflow: Creation
+			create l_label
+			create l_aware.make_with_widget (l_label, agent l_label.set_text, agent l_label.text)
+			l_label.set_text ("view_label_text")
+			l_aware.set_model_setter_agent (agent mock_object_one.set_mock_string_32 (?))
+
+				-- Test: label text to move to model
+			assert_strings_equal ("view_label_text", "view_label_text", l_label.text)
+
+				-- Workflow: View to Model
+			l_aware.view_to_model
+
+				-- Test: Model has string
+			assert_strings_equal ("model_has_string", "view_label_text", mock_object_one.mock_string_32)
 		end
 
 feature {NONE} -- Mock Objects
