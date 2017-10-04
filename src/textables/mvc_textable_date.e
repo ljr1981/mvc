@@ -8,9 +8,24 @@ inherit
 		end
 
 create
-	make_with_widget
+	make_with_widget,
+	make_masked
 
 feature {NONE} -- Initialization
+
+	make_masked (a_widget: EV_TEXTABLE; a_widget_setter_agent: like view_setter_agent; a_widget_getter_agent: like view_getter_agent)
+		local
+			l_mask: DATE_TIME_INPUT_MASK
+		do
+			make_with_widget (a_widget, a_widget_setter_agent, a_widget_getter_agent)
+			create l_mask.make_month_day_year
+			check maskable: attached {EV_TEXT_COMPONENT} a_widget as al_text_component then
+				l_mask.initialize_masking_widget_events (al_text_component)
+				set_masking_agent (agent on_mask (al_text_component, l_mask, ?))
+				set_unmasking_agent (agent on_unmask (al_text_component, l_mask, ?))
+			end
+
+		end
 
 	make_with_widget (a_widget: EV_TEXTABLE; a_widget_setter_agent: like view_setter_agent; a_widget_getter_agent: like view_getter_agent)
 			-- <Precursor>
