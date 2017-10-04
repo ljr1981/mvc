@@ -95,36 +95,44 @@ feature {NONE} -- Test Helpers
 		local
 			l_aware: MVC_TEXTABLE
 		do
-				-- Workflow: Creation
+				-- Workflow: Creation & Setup
 			create l_aware.make_with_widget (a_widget, agent a_widget.set_text, agent a_widget.text)
 			l_aware.set_model_getter_agent (agent mock_object_one.mock_string_32)
 			l_aware.set_model_setter_agent (agent mock_object_one.set_mock_string_32)
+			mock_object_one.reset_mock_string_32
 
 				-- Test: default state
-			assert_32 ("empty_label_text", a_widget.text.is_empty)
-			assert_32 ("not_equal", not a_widget.text.same_string (mock_object_one.mock_string_32))
+			assert_32 ("a_widget_text_is_empty", a_widget.text.is_empty)
+			assert_strings_not_equal ("view_not_equal_model", a_widget.text, mock_object_one.mock_string_32)
+			assert_strings_equal ("mock_string_text", Mock_string_32_default, mock_object_one.mock_string_32)
 
 				-- Workflow: Model to View
 			l_aware.model_to_view
 
 				-- Test: Label text
-			assert_strings_equal ("has_default_text", a_widget.text, mock_object_one.mock_string_32)
+			assert_strings_equal ("view_same_as_model", a_widget.text, mock_object_one.mock_string_32)
 
-				-- Workflow: Creation
-			a_widget.set_text ("view_label_text")
-			l_aware.set_model_setter_agent (agent mock_object_one.set_mock_string_32 (?))
+				-- Workflow: New widget text
+			a_widget.set_text (View_to_model_widget_text.twin)
 
-				-- Test: label text to move to model
-			assert_strings_equal ("view_label_text", "view_label_text", a_widget.text)
+				-- Test: New widget text set
+			assert_strings_equal ("view_label_text", View_to_model_widget_text, a_widget.text)
 
 				-- Workflow: View to Model
 			l_aware.view_to_model
 
 				-- Test: Model has string
-			assert_strings_equal ("model_has_string", "view_label_text", mock_object_one.mock_string_32)
+			assert_strings_equal ("model_has_string", View_to_model_widget_text, mock_object_one.mock_string_32)
 		end
 
 feature {NONE} -- Mock Objects
+
+	View_to_model_widget_text: STRING = "view_label_text"
+
+	Mock_string_32_default: STRING_32
+		once
+			Result := {MOCK_OBJECT_ONE}.Mock_string_32_default.twin
+		end
 
 	mock_object_one: MOCK_OBJECT_ONE
 		attribute
