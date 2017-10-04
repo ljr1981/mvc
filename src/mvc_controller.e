@@ -113,7 +113,7 @@ feature -- Ops
 			else
 				l_unmasked_data := l_view_data
 			end
-				--	3. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
+				--	3. PRE-VALIDATION (optionally): Determine if the raw View data is valid or invalid.
 			if attached  view_data_validator_agent as al_validator_agent then
 				al_validator_agent.call ([l_unmasked_data])
 				check attached al_validator_agent.last_result as al_validator_result then
@@ -133,7 +133,16 @@ feature -- Ops
 					l_converted_data := al_converted_data
 				end
 			end
-				--	5. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
+				--	5. POST-VALIDATION (optionally): Determine if the raw View data is valid or invalid.
+			if attached  model_data_validator_agent as al_validator_agent then
+				al_validator_agent.call ([l_converted_data])
+				check attached al_validator_agent.last_result as al_validator_result then
+					is_valid := al_validator_result
+				end
+			else
+				is_valid := True
+			end
+				--	6. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
 			if is_valid then
 				check has_setter: attached model_setter_agent as al_setter_agent then
 					al_setter_agent.call ([l_converted_data])
