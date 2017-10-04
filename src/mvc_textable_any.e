@@ -1,5 +1,5 @@
 deferred class
-	MVC_TEXTABLE [MD -> ANY]
+	MVC_TEXTABLE_ANY [MD -> ANY]
 
 inherit
 	MVC_CONTROLLER [EV_TEXTABLE, MD, STRING_32]

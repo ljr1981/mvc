@@ -2,7 +2,7 @@ class
 	MVC_TEXTABLE_DATE
 
 inherit
-	MVC_TEXTABLE [DATE]
+	MVC_TEXTABLE_ANY [DATE]
 		redefine
 			make_with_widget
 		end

@@ -15,9 +15,6 @@ deferred class
 inherit
 	MVC_ANY
 
---create
---	make_with_widget
-
 feature {NONE} -- Initialization
 
 	make_with_widget (a_widget: P; a_widget_setter_agent: like view_setter_agent; a_widget_getter_agent: like view_getter_agent)

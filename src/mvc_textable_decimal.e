@@ -2,7 +2,7 @@ class
 	MVC_TEXTABLE_DECIMAL
 
 inherit
-	MVC_TEXTABLE [DECIMAL]
+	MVC_TEXTABLE_ANY [DECIMAL]
 		redefine
 			make_with_widget
 		end
