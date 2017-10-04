@@ -33,12 +33,38 @@ feature -- Test routines
 			l_menu: EV_MENU
 			l_menu_separator: EV_MENU_SEPARATOR
 			l_radio_menu_item: EV_RADIO_MENU_ITEM
-			-- l_notebook_tab: EV_NOTEBOOK_TAB
 			l_button: EV_BUTTON
 			l_radio_button: EV_RADIO_BUTTON
 			l_frame: EV_FRAME
 			l_combo_box: EV_COMBO_BOX
+			l_text: EV_TEXT
+			l_rich_text: EV_RICH_TEXT
+			l_tool_bar_button: EV_TOOL_BAR_BUTTON
+			l_tool_bar_radio_button: EV_TOOL_BAR_RADIO_BUTTON
+			l_tree_item: EV_TREE_ITEM
+				-- Notebook related
+			l_notebook: EV_NOTEBOOK
+			l_notebook_tab: EV_NOTEBOOK_TAB
+			l_box: EV_VERTICAL_BOX
 		do
+				-- Notebook related
+			create l_box
+			create l_notebook
+			l_notebook.extend (l_box)
+			l_notebook_tab := l_notebook.item_tab (l_box)
+			test_textable (l_notebook_tab)
+
+				-- All others
+			create l_tree_item
+			test_textable (l_tree_item)
+			create l_tool_bar_radio_button
+			test_textable (l_tool_bar_radio_button)
+			create l_tool_bar_button
+			test_textable (l_tool_bar_button)
+			create l_rich_text
+			test_textable (l_rich_text)
+			create l_text
+			test_textable (l_text)
 			create l_combo_box
 			test_textable (l_combo_box)
 			create l_frame
