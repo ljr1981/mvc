@@ -386,13 +386,13 @@ note
 		2. UNMASK (optionally): Remove masking transforms from View data, reconstituting
 			an unmasked version of the data.
 			
-		3. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
-		
-		4. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
-			Note that for GUI-level validation, one might stop here (e.g. not complete
-			the final step of sending the data back to the Model).
+		3. PRE-VALIDATION (optionally): Determine if raw unmasked View data is valid for conversion.
 			
-		5. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
+		4. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
+		
+		5. POST-VALIDATION (optionally): Determine if converted data is valid for Model.
+			
+		6. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
 			execute the Model_setter_agent as a Procedure routine taking one argument (i.e.
 			the raw Model data value).
 			
