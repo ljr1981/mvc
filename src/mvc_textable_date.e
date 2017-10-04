@@ -17,13 +17,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_widget, a_widget_setter_agent, a_widget_getter_agent)
 			model_to_view_data_converter_agent := agent on_model_to_view_date_converter_agent
+			view_to_model_data_converter_agent := agent on_view_to_model_date_converter_agent
 		end
 
 feature -- Converters
 
 	on_model_to_view_date_converter_agent (a_model: DATE): STRING_32
 		do
-			Result := {STRING_32} ""
+			Result := a_model.out.to_string_32
+		end
+
+	on_view_to_model_date_converter_agent (a_date_text: STRING_32): DATE
+		do
+			create Result.make_now
+			if Result.date_valid_default (a_date_text) then
+				create Result.make_from_string_default (a_date_text.out)
+			end
 		end
 
 end

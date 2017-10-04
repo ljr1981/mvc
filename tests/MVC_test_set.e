@@ -23,8 +23,35 @@ inherit
 
 feature -- Test routines
 
-	mvc_label_textable_tests
-			-- `mvc_label_string_32_model_to_view_tests'
+	mvc_string_date_tests
+		local
+			l_field: EV_TEXT_FIELD
+			l_mvc_date: MVC_TEXTABLE_DATE
+		do
+				-- Workflow: Creation
+			create l_field
+			create l_mvc_date.make_with_widget (l_field, agent l_field.set_text, agent l_field.text)
+			l_mvc_date.set_model_getter_agent (agent mock_object_one.mock_date)
+			l_mvc_date.set_model_setter_agent (agent mock_object_one.set_mock_date)
+
+				-- Workflow: Model to View
+			l_mvc_date.model_to_view
+
+				-- Test: View has date
+			assert_strings_equal ("view_has_date", "01/01/2017", l_field.text)
+
+				-- Workflow: Change date
+			l_field.set_text ("12/31/2017")
+
+				-- Workflow: View to Model
+			l_mvc_date.view_to_model
+
+				-- Test: Model has new date
+			assert_strings_equal ("model_has_new_date", "12/31/2017", mock_object_one.mock_date.out)
+		end
+
+	mvc_textable_tests
+			-- `mvc_textable_tests'
 		local
 			l_button: EV_BUTTON
 			l_check_menu_item: EV_CHECK_MENU_ITEM
