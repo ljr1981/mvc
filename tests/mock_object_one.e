@@ -37,6 +37,8 @@ feature -- Access
 
 	mock_boolean: BOOLEAN
 
+	mock_real: REAL
+
 feature -- Setters
 
 	set_mock_string_32 (a_value: like mock_string_32)
@@ -77,6 +79,11 @@ feature -- Setters
 	set_mock_boolean (a_value: like mock_boolean)
 		do
 			mock_boolean := a_value
+		end
+
+	set_mock_real (a_value: like mock_real)
+		do
+			mock_real := a_value
 		end
 
 feature -- Constants
