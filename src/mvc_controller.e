@@ -149,8 +149,6 @@ feature -- Ops
 
 	is_valid: BOOLEAN
 
-	can_take_invalid_data: BOOLEAN
-
 feature -- Access: Getter-Setter
 
 	model_getter_agent: detachable FUNCTION [MD]
@@ -166,23 +164,9 @@ feature -- Access: Getter-Setter
 	model_setter_agent: detachable PROCEDURE [MD]
 			-- Sets MD model data from view to the model.
 
-	attached_model_setter_agent: attached like model_setter_agent
-		do
-			check has_agent: attached model_setter_agent as al_agent then
-				Result := al_agent
-			end
-		end
-
 	model_to_reasonable_default_agent: detachable PROCEDURE
 			-- A call to a model PROCEDURE that resets
 			--	the model attribute to a reasonable default.
-
-	attached_model_to_reasonable_default_agent: attached like model_to_reasonable_default_agent
-		do
-			check has_agent: attached model_to_reasonable_default_agent as al_agent then
-				Result := al_agent
-			end
-		end
 
 feature -- Access: Converters
 
@@ -191,24 +175,10 @@ feature -- Access: Converters
 			--  This is a specialized converter.
 			-- 	There are common converters based on MD:VD type pairs
 
-	attached_view_to_model_data_converter_agent: attached like view_to_model_data_converter_agent
-		do
-			check has_agent: attached view_to_model_data_converter_agent as al_agent then
-				Result := al_agent
-			end
-		end
-
 	model_to_view_data_converter_agent: detachable FUNCTION [TUPLE [MD], VD]
 			-- Converts MD model data to VD view-ready data
 			--  This is a specialized converter.
 			-- 	There are common converters based on MD:VD type pairs
-
-	attached_model_to_view_data_converter_agent: attached like model_to_view_data_converter_agent
-		do
-			check has_agent: attached model_to_view_data_converter_agent as al_agent then
-				Result := al_agent
-			end
-		end
 
 feature -- Access: Masking
 
@@ -340,6 +310,7 @@ note
 			
 		Validator_agents ::=
 			Model_data_validator_agent
+			View_data_validator_agent
 			
 		Converter_agents ::=
 			Model_to_view_converter_agent
