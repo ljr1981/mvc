@@ -57,7 +57,7 @@ feature -- Ops
 
 				-- 2. VALIDATION (optional and always True (valid) when no validator)
 			if attached model_data_validator_agent as al_agent then
-				al_agent.call (l_data)
+				al_agent.call ([l_data])
 				is_valid := al_agent.last_result
 			else
 				is_valid := True
@@ -113,7 +113,16 @@ feature -- Ops
 			else
 				l_unmasked_data := l_view_data
 			end
-				--	3. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
+				--	3. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
+			if attached  view_data_validator_agent as al_validator_agent then
+				al_validator_agent.call ([l_unmasked_data])
+				check attached al_validator_agent.last_result as al_validator_result then
+					is_valid := al_validator_result
+				end
+			else
+				is_valid := True
+			end
+				--	4. CONVERT (optionally): Convert the unmasked raw View data back to a Model form.
 			if attached view_to_model_data_converter_agent as al_converter_agent then
 				al_converter_agent.call ([l_unmasked_data])
 				check has_converted_data: attached al_converter_agent.last_result as al_converted_data then
@@ -123,15 +132,6 @@ feature -- Ops
 				check same: attached {MD} l_view_data as al_converted_data then
 					l_converted_data := al_converted_data
 				end
-			end
-				--	4. VALIDATION (optionally): Determine if the raw Model data is valid or invalid.
-			if attached  model_data_validator_agent as al_validator_agent then
-				al_validator_agent.call ([l_converted_data])
-				check attached al_validator_agent.last_result as al_validator_result then
-					is_valid := al_validator_result
-				end
-			else
-				is_valid := True
 			end
 				--	5. SET (required): Depending on rule `can_take_invalid_data' for the Model attribute,
 			if is_valid then
@@ -214,9 +214,13 @@ feature -- Access: Masking
 
 feature -- Access: Validation
 
-	model_data_validator_agent: detachable PREDICATE
+	model_data_validator_agent: detachable PREDICATE [detachable MD]
 			-- Responsible for ensuring data passed to or from
 			-- model is valid before getting or setting.
+
+	view_data_validator_agent: detachable PREDICATE [detachable VD]
+			-- Responsible for ensuring converted view data is
+			-- valid.
 
 feature -- Access: View-setter
 

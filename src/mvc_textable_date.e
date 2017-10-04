@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_widget, a_widget_setter_agent, a_widget_getter_agent)
+			view_data_validator_agent := agent on_view_data_validator_agent
 			model_to_view_data_converter_agent := agent on_model_to_view_date_converter_agent
 			view_to_model_data_converter_agent := agent on_view_to_model_date_converter_agent
 		end
@@ -32,6 +33,15 @@ feature -- Converters
 			create Result.make_now
 			if Result.date_valid_default (a_date_text) then
 				create Result.make_from_string_default (a_date_text.out)
+			end
+		end
+
+	on_view_data_validator_agent (a_date_text: detachable STRING_32): BOOLEAN
+		do
+			if attached a_date_text as al_date_text then
+				Result := (create {DATE}.make_now).date_valid_default (al_date_text)
+			else
+				Result := True
 			end
 		end
 
