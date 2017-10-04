@@ -23,6 +23,14 @@ inherit
 
 feature -- Test routines
 
+	misc
+		local
+			l_string: MVC_TEXTABLE_STRING
+			l_readable: MVC_TEXTABLE_READABLE_STRING_GENERAL
+		do
+
+		end
+
 	mvc_basic_textable_tests
 			-- `mvc_textable_tests'
 		local
@@ -420,7 +428,99 @@ feature -- Test routines
 			test_integer_textables (l_tree_item)
 		end
 
+	mvc_boolean_tests
+		local
+			l_button: EV_BUTTON
+			l_check_menu_item: EV_CHECK_MENU_ITEM
+			l_combo_box: EV_COMBO_BOX
+			l_frame: EV_FRAME
+			l_label: EV_LABEL
+			l_list_item: EV_LIST_ITEM
+			l_menu: EV_MENU
+			l_menu_separator: EV_MENU_SEPARATOR
+			l_radio_button: EV_RADIO_BUTTON
+			l_radio_menu_item: EV_RADIO_MENU_ITEM
+			l_rich_text: EV_RICH_TEXT
+			l_text: EV_TEXT
+			l_text_field: EV_TEXT_FIELD
+			l_tool_bar_button: EV_TOOL_BAR_BUTTON
+			l_tool_bar_radio_button: EV_TOOL_BAR_RADIO_BUTTON
+			l_tree_item: EV_TREE_ITEM
+				-- Notebook related
+			l_notebook: EV_NOTEBOOK
+			l_notebook_tab: EV_NOTEBOOK_TAB
+			l_box: EV_VERTICAL_BOX
+		do
+				-- Notebook related
+			create l_box
+			create l_notebook
+			l_notebook.extend (l_box)
+			l_notebook_tab := l_notebook.item_tab (l_box)
+			test_date_textables (l_notebook_tab)
+
+				-- All others
+			create l_button
+			create l_check_menu_item
+			create l_combo_box
+			create l_frame
+			create l_label
+			create l_list_item
+			create l_menu
+			create l_menu_separator
+			create l_radio_button
+			create l_radio_menu_item
+			create l_rich_text
+			create l_text
+			create l_text_field
+			create l_tool_bar_button
+			create l_tool_bar_radio_button
+			create l_tree_item
+
+			test_boolean_textables (l_button)
+			test_boolean_textables (l_check_menu_item)
+			test_boolean_textables (l_combo_box)
+			test_boolean_textables (l_frame)
+			test_boolean_textables (l_label)
+			test_boolean_textables (l_list_item)
+			test_boolean_textables (l_menu)
+			test_boolean_textables (l_menu_separator)
+			test_boolean_textables (l_radio_button)
+			test_boolean_textables (l_radio_menu_item)
+			test_boolean_textables (l_rich_text)
+			test_boolean_textables (l_text)
+			test_boolean_textables (l_text_field)
+			test_boolean_textables (l_tool_bar_button)
+			test_boolean_textables (l_tool_bar_radio_button)
+			test_boolean_textables (l_tree_item)
+		end
+
 feature {NONE} -- Test Helpers
+
+	test_boolean_textables (a_widget: EV_TEXTABLE)
+		local
+			l_mvc: MVC_TEXTABLE_BOOLEAN
+		do
+				-- Workflow: Creation
+			create l_mvc.make_with_widget (a_widget, agent a_widget.set_text, agent a_widget.text)
+			l_mvc.set_model_getter_agent (agent mock_object_one.mock_boolean)
+			l_mvc.set_model_setter_agent (agent mock_object_one.set_mock_boolean)
+			mock_object_one.set_mock_boolean (True)
+
+				-- Workflow: Model to View
+			l_mvc.model_to_view
+
+				-- Test: View has date
+			assert_strings_equal ("view_has_integer", "True", a_widget.text)
+
+				-- Workflow: Change date
+			a_widget.set_text ("False")
+
+				-- Workflow: View to Model
+			l_mvc.view_to_model
+
+				-- Test: Model has new date
+			assert_strings_equal ("model_has_new_integer", "False", mock_object_one.mock_boolean.out)
+		end
 
 	test_integer_textables (a_widget: EV_TEXTABLE)
 		local

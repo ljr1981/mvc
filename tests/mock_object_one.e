@@ -35,6 +35,8 @@ feature -- Access
 
 	mock_integer: INTEGER
 
+	mock_boolean: BOOLEAN
+
 feature -- Setters
 
 	set_mock_string_32 (a_value: like mock_string_32)
@@ -70,6 +72,11 @@ feature -- Setters
 	set_mock_integer (a_value: like mock_integer)
 		do
 			mock_integer := a_value
+		end
+
+	set_mock_boolean (a_value: like mock_boolean)
+		do
+			mock_boolean := a_value
 		end
 
 feature -- Constants
