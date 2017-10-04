@@ -23,13 +23,13 @@ feature {NONE} -- Initialization
 feature -- Converters
 
 	on_model_to_view_date_converter_agent (a_model: STRING): STRING_32
-			-- Convert from DATE to STRING
+			-- Convert from STRING to STRING_32
 		do
 			Result := a_model.out.to_string_32
 		end
 
 	on_view_to_model_date_converter_agent (a_text: STRING_32): STRING
-			-- Convert from STRING to DATE
+			-- Convert from STRING_32 to STRING
 		do
 			Result := a_text.out
 		end

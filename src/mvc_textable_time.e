@@ -24,13 +24,13 @@ feature {NONE} -- Initialization
 feature -- Converters
 
 	on_model_to_view_date_converter_agent (a_model: TIME): STRING_32
-			-- Convert from DATE to STRING
+			-- Convert from TIME to STRING_32
 		do
 			Result := a_model.out.to_string_32
 		end
 
 	on_view_to_model_date_converter_agent (a_text: STRING_32): TIME
-			-- Convert from STRING to DATE
+			-- Convert from STRING_32 to TIME
 		do
 			create Result.make_now
 			if Result.time_valid (a_text, {DATE_TIME_TOOLS}.time_default_format_string) then
@@ -39,7 +39,7 @@ feature -- Converters
 		end
 
 	on_view_data_validator_agent (a_text: detachable STRING_32): BOOLEAN
-			-- Is the STRING correctly formatted for creating a DATE?
+			-- Is the STRING_32 correctly formatted for creating a TIME?
 		do
 			if attached a_text as al_text then
 				Result := (create {TIME}.make_now).time_valid (al_text, {DATE_TIME_TOOLS}.time_default_format_string)

@@ -24,13 +24,13 @@ feature {NONE} -- Initialization
 feature -- Converters
 
 	on_model_to_view_date_converter_agent (a_model: DECIMAL): STRING_32
-			-- Convert from DATE to STRING
+			-- Convert from DECIMAL to STRING_32
 		do
 			Result := a_model.out.to_string_32
 		end
 
 	on_view_to_model_date_converter_agent (a_text: STRING_32): DECIMAL
-			-- Convert from STRING to DATE
+			-- Convert from STRING_32 to DECIMAL
 		do
 			create Result.make_zero
 			if
@@ -44,7 +44,7 @@ feature -- Converters
 		end
 
 	on_view_data_validator_agent (a_text: detachable STRING_32): BOOLEAN
-			-- Is the STRING correctly formatted for creating a DATE?
+			-- Is the STRING_32 correctly formatted for creating a DECIMAL?
 		do
 			Result := attached a_text as al_text and then
 						(al_text.is_number_sequence or else
