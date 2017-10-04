@@ -18,10 +18,22 @@ feature -- Access
 			create Result.make (2017, 1, 1)
 		end
 
+	mock_date_time: DATE_TIME
+		attribute
+			create Result.make (2017, 1, 1, 12, 0, 0)
+		end
+
+	mock_time: TIME
+		attribute
+			create Result.make (12, 0, 0)
+		end
+
 	mock_decimal: DECIMAL
 		attribute
 			create Result.make_zero
 		end
+
+	mock_integer: INTEGER
 
 feature -- Setters
 
@@ -40,9 +52,24 @@ feature -- Setters
 			mock_date := a_value
 		end
 
+	set_mock_time (a_value: like mock_time)
+		do
+			mock_time := a_value
+		end
+
+	set_mock_date_time (a_value: like mock_date_time)
+		do
+			mock_date_time := a_value
+		end
+
 	set_mock_decimal (a_value: like mock_decimal)
 		do
 			mock_decimal := a_value
+		end
+
+	set_mock_integer (a_value: like mock_integer)
+		do
+			mock_integer := a_value
 		end
 
 feature -- Constants
