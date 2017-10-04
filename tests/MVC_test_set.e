@@ -94,7 +94,7 @@ feature {NONE} -- Test Helpers
 
 	test_textable (a_widget: EV_TEXTABLE)
 		local
-			l_aware: MVC_TEXTABLE
+			l_aware: MVC_TEXTABLE_STRING_32
 		do
 				-- Workflow: Creation & Setup
 			create l_aware.make_with_widget (a_widget, agent a_widget.set_text, agent a_widget.text)

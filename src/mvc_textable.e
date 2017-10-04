@@ -1,10 +1,7 @@
-class
-	MVC_TEXTABLE
+deferred class
+	MVC_TEXTABLE [MD -> ANY]
 
 inherit
-	MVC_CONTROLLER [EV_TEXTABLE, STRING_32, STRING_32]
-
-create
-	make_with_widget
+	MVC_CONTROLLER [EV_TEXTABLE, MD, STRING_32]
 
 end
