@@ -126,7 +126,7 @@ feature -- Ops
 					l_converted_data := al_converted_data
 				end
 			else
-				check same: attached {MD} l_view_data as al_converted_data then
+				check same: attached {MD} l_unmasked_data as al_converted_data then
 					l_converted_data := al_converted_data
 				end
 			end

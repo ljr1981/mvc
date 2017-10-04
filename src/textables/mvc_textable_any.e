@@ -33,7 +33,9 @@ feature {NONE} -- Masking Agent Events
 
 	on_unmask (a_widget: EV_TEXT_COMPONENT; a_mask: INPUT_MASK [ANY, detachable DATA_COLUMN_METADATA [ANY]]; a_string: STRING_32): STRING_32
 		do
-			Result := a_mask.remove (a_widget.text, Void).value.out.to_string_32
+			check attached {STRING_32} a_mask.remove (a_widget.text, Void).value as al_value then
+				Result := al_value
+			end
 		end
 
 end
