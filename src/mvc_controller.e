@@ -6,17 +6,17 @@ note
 		See end-of-class notes.
 		]"
 
-class
-	MVC_CONTROLLER [P -> EV_PRIMITIVE, MD -> detachable ANY, VD -> ANY]
-			-- P = Type of Primitive widget
+deferred class
+	MVC_CONTROLLER [P -> EV_ANY, MD -> detachable ANY, VD -> ANY]
+			-- P = Type of Primitive widget {EV_PRIMITIVE} or {EV_TEXTABLE}
 			-- MD = Model-data type
 			-- VD = View-data type (implies conversion from MD<-->VD)
 
 inherit
 	MVC_ANY
 
-create
-	make_with_widget
+--create
+--	make_with_widget
 
 feature {NONE} -- Initialization
 
