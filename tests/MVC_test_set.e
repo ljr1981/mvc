@@ -26,19 +26,19 @@ feature -- Test routines
 	mvc_label_textable_tests
 			-- `mvc_label_string_32_model_to_view_tests'
 		local
-			l_label: EV_LABEL
-			l_text_field: EV_TEXT_FIELD
-			l_list_item: EV_LIST_ITEM
+			l_button: EV_BUTTON
 			l_check_menu_item: EV_CHECK_MENU_ITEM
+			l_combo_box: EV_COMBO_BOX
+			l_frame: EV_FRAME
+			l_label: EV_LABEL
+			l_list_item: EV_LIST_ITEM
 			l_menu: EV_MENU
 			l_menu_separator: EV_MENU_SEPARATOR
-			l_radio_menu_item: EV_RADIO_MENU_ITEM
-			l_button: EV_BUTTON
 			l_radio_button: EV_RADIO_BUTTON
-			l_frame: EV_FRAME
-			l_combo_box: EV_COMBO_BOX
-			l_text: EV_TEXT
+			l_radio_menu_item: EV_RADIO_MENU_ITEM
 			l_rich_text: EV_RICH_TEXT
+			l_text: EV_TEXT
+			l_text_field: EV_TEXT_FIELD
 			l_tool_bar_button: EV_TOOL_BAR_BUTTON
 			l_tool_bar_radio_button: EV_TOOL_BAR_RADIO_BUTTON
 			l_tree_item: EV_TREE_ITEM
@@ -55,38 +55,39 @@ feature -- Test routines
 			test_textable (l_notebook_tab)
 
 				-- All others
-			create l_tree_item
-			test_textable (l_tree_item)
-			create l_tool_bar_radio_button
-			test_textable (l_tool_bar_radio_button)
-			create l_tool_bar_button
-			test_textable (l_tool_bar_button)
-			create l_rich_text
-			test_textable (l_rich_text)
-			create l_text
-			test_textable (l_text)
-			create l_combo_box
-			test_textable (l_combo_box)
-			create l_frame
-			test_textable (l_frame)
-			create l_radio_button
-			test_textable (l_radio_button)
 			create l_button
-			test_textable (l_button)
-			create l_radio_menu_item
-			test_textable (l_radio_menu_item)
-			create l_menu_separator
-			test_textable (l_menu_separator)
-			create l_menu
-			test_textable (l_menu)
-			create l_label
-			test_textable (l_label)
-			create l_text_field
-			test_textable (l_text_field)
-			create l_list_item
-			test_textable (l_list_item)
 			create l_check_menu_item
+			create l_combo_box
+			create l_frame
+			create l_label
+			create l_list_item
+			create l_menu
+			create l_menu_separator
+			create l_radio_button
+			create l_radio_menu_item
+			create l_rich_text
+			create l_text
+			create l_text_field
+			create l_tool_bar_button
+			create l_tool_bar_radio_button
+			create l_tree_item
+
+			test_textable (l_button)
 			test_textable (l_check_menu_item)
+			test_textable (l_combo_box)
+			test_textable (l_frame)
+			test_textable (l_label)
+			test_textable (l_list_item)
+			test_textable (l_menu)
+			test_textable (l_menu_separator)
+			test_textable (l_radio_button)
+			test_textable (l_radio_menu_item)
+			test_textable (l_rich_text)
+			test_textable (l_text)
+			test_textable (l_text_field)
+			test_textable (l_tool_bar_button)
+			test_textable (l_tool_bar_radio_button)
+			test_textable (l_tree_item)
 		end
 
 feature {NONE} -- Test Helpers
