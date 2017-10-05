@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="mvc" uuid="14C8E0CB-3A16-829E-6BED-00004A8DD131" library_target="mvc">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="mvc" uuid="14C8E0CB-3A16-829E-6BED-00004A8DD131" readonly="false" library_target="mvc">
 	<description>mvc implementation</description>
 	<target name="mvc">
 		<root all_classes="true"/>
