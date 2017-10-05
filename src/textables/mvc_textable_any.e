@@ -6,12 +6,6 @@ inherit
 
 feature {NONE} -- Initialization Support
 
-	US_phone_mask: STRING = "(999) 999-9999"
-
-	US_social_security_mask: STRING = "999-99-9999"
-
-	Credit_card_mask: STRING = "9999-9999-9999-9999"
-
 	make_with_masked_widget (a_widget: EV_TEXTABLE; a_widget_setter_agent: like view_setter_agent; a_widget_getter_agent: like view_getter_agent; a_mask: TEXT_INPUT_MASK [ANY, detachable DATA_COLUMN_METADATA [ANY]])
 		require
 			maskable: attached {EV_TEXT_COMPONENT} a_widget
@@ -37,5 +31,13 @@ feature {NONE} -- Masking Agent Events
 				Result := al_value
 			end
 		end
+
+feature -- Constants
+
+	US_phone_mask: STRING = "(999) 999-9999"
+
+	US_social_security_mask: STRING = "999-99-9999"
+
+	Credit_card_mask: STRING = "9999-9999-9999-9999"
 
 end
