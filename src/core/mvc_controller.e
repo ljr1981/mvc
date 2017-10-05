@@ -41,8 +41,8 @@ feature -- Access: Widget
 feature -- Ops
 
 	model_to_view
-			-- Move data from Model to View.
-			-- See end-of-class notes: Workflow: Model-to-View.
+			-- Move data from Model to View, by the process of:
+			-- Model-get, validate, convert, mask, View-set/render.
 		local
 			l_data: MD
 			l_converted_data,
@@ -91,6 +91,8 @@ feature -- Ops
 		end
 
 	view_to_model
+			-- Move View data to Model by the actions of:
+			-- Unrender, unmask, pre-validate, convert, post-validate, model-set.
 		local
 			l_view_data: VD
 			l_unmasked_data: VD
@@ -155,6 +157,7 @@ feature -- Access: Getter-Setter
 			-- Gets MD model data from model for view.
 
 	attached_model_getter_agent: attached like model_getter_agent
+			-- Attached version of `model_getter_agent'.
 		do
 			check has_agent: attached model_getter_agent as al_agent then
 				Result := al_agent
