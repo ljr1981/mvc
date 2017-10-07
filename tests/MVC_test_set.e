@@ -38,15 +38,27 @@ feature -- Test routines
 
 			l_list: EV_LIST
 		do
-			create l_list
+				-- WORKFLOW: Creation
 			create items.make_from_array (<<"blah1", "blah2">>)
+			create l_list
 			create l_mvc_list.make_with_widget (l_list, agent l_list.extend, agent l_list.linear_representation)
-			create l_mvc_list.make_as_ev_list (l_list, agent items, agent items.fill)
+			create l_mvc_list.make_as_ev_list (l_list, agent items, items)
+				-- WORKFLOW: Model to View
 			l_mvc_list.model_to_view
---			l_mvc_list.view_to_model
+				-- WORKFLOW: change an item
+			check has_widget: attached l_mvc_list.widget as al_widget then
+				check has_item: attached {EV_LIST_ITEM} al_widget.at (1) as al_item then
+					al_item.set_text ("something_new")
+				end
+			end
+				-- WORKFLOW: View to Model
+			l_mvc_list.view_to_model
+				-- TEST: Model has View?
+			assert_strings_equal ("something_new", "something_new", items [1])
 		end
 
 	items: ARRAYED_LIST [STRING] attribute create Result.make (2) end
+			-- An array of `items' for use with `mvc_list_tests' (above).
 
 	mvc_basic_textable_tests
 			-- `mvc_textable_tests'
