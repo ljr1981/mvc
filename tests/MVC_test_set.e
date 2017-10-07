@@ -32,17 +32,60 @@ feature -- Test routines
 		end
 
 	mvc_list_tests
-		local
-				-- forms of MVC_ITEM_LIST [..]
-			l_mvc_list: MVC_ITEM_LIST
+		note
+			problems: "[
+				The issue is: check attached {G_IMP} v.implementation as l_item then
+				
+				Where: {G_IMP} = EV_ANY_I and the actual incoming is EV_LIST_ITEM_IMP.
+							The v.implementation is attached, so the problem must be
+							conformance of EV_LIST_ITEM_IMP = G_IMP -> EV_ANY_I
+							
+				Bottom line: The failure is that only EV_COMBO_BOX and EV_LIST will
+						take an {EV_CONTAINABLE} item of {EV_LIST_ITEM}. The remainder
+						take their own types of containable items.
+						
+				Solution: Create an ancestor, which will allow descending variants for
+						each of the {EV_CONTAINABLE} item types (e.g. EV_MENU_ITEM,
+						EV_MULTI_COLUMN_LIST_ROW, *EV_TOOL_BAR_ITEM, and EV_TREE_ITEM)
+						
+						EV_ITEM
+							EV_LIST_ITEM
+							EV_MENU_ITEM							--> MVC_MENU_ITEM_LIST
+								EV_CHECK_MENU_ITEM
+								EV_MENU
+								EV_MENU_SEPARATOR
+								EV_RADIO_MENU_ITEM
+							EV_MULTI_COLUMN_LIST_ROW				--> MVC_MULTI_COLUMN_LIST
+							EV_TOOL_BAR_ITEM						--> MVC_TOOL_BAR
+								EV_TOOL_BAR_BUTTON
+									EV_TOOL_BAR_DROP_DOWN_BUTTON
+									EV_TOOL_BAR_RADIO_BUTTON
+									EV_TOOL_BAR_TOGGLE_BUTTON
+								EV_TOOL_BAR_SEPARATOR
+							EV_TREE_NODE							--> MVC_TREE_LIST
+								EV_TREE_ITEM
+				]"
+		do
+			test_list (create {EV_COMBO_BOX})
+			test_list (create {EV_LIST})
+--			test_list (create {EV_MENU}) 				-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_MENU_BAR}) 			-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_MULTI_COLUMN_LIST}) 	-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_TOOL_BAR}) 			-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_TREE})				-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_CHECKABLE_TREE})		-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
+--			test_list (create {EV_TREE_ITEM})			-- test routine: exceptional (Check violation in EV_DYNAMIC_LIST_IMP.insert_i_th)
 
-			l_list: EV_LIST
+		end
+
+	test_list (a_list: EV_ITEM_LIST [EV_ITEM])
+		local
+			l_mvc_list: MVC_LIST_ITEM_LIST
 		do
 				-- WORKFLOW: Creation
 			create items.make_from_array (<<"blah1", "blah2">>)
-			create l_list
-			create l_mvc_list.make_with_widget (l_list, agent l_list.extend, agent l_list.linear_representation)
-			create l_mvc_list.make_as_ev_list (l_list, agent items, items)
+			create l_mvc_list.make_with_widget (a_list, agent a_list.extend, agent a_list.linear_representation)
+			create l_mvc_list.make_as_ev_list (a_list, agent items, items)
 				-- WORKFLOW: Model to View
 			l_mvc_list.model_to_view
 				-- WORKFLOW: change an item

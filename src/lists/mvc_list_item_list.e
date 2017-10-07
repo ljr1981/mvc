@@ -1,50 +1,41 @@
-note
-	coverage: "[
-		The following classes are potentially covered by this class.
-		The caveat to actual coverage is dependent on the 2nd Generic
-		below (e.g. ARRAYED_LIST [STRING])--that is--each of the descending
-		classes must be storing lists of {STRING} items, which is what
-		the getter and setter agents are dependent on.
-	
-*EV_ITEM_LIST [G -> EV_ITEM]
-	*EV_LIST_ITEM_LIST
-		{EV_COMBO_BOX}
-		{EV_LIST}
-	*EV_MENU_ITEM_LIST				-- FAIL from here down
-		{EV_MENU}
-		{EV_MENU_BAR}
-	{EV_MULTI_COLUMN_LIST}
-	{EV_TOOL_BAR}
-	*EV_TREE_NODE_LIST
-		{EV_TREE}
-			{EV_CHECKABLE_TREE}
-		*EV_TREE_NODE
-			{EV_TREE_ITEM}
-		]"
-
-deferred class
-	MVC_ITEM_LIST [G_LST, G_ARR, G_LIN]
+class
+	MVC_LIST_ITEM_LIST
 
 inherit
-	MVC_CONTROLLER [G_LST, G_ARR, G_LIN]
+	MVC_CONTROLLER [EV_ITEM_LIST [EV_ITEM], ARRAYED_LIST [STRING], LINEAR [EV_ITEM]]
 
---create
---	make_with_widget,
---	make_as_ev_list
+create
+	make_with_widget,
+	make_as_ev_list
 
 feature {NONE} -- Initialization
 
-	make_as_ev_list (a_widget: G_LST; a_model_getter_agent: like model_getter_agent; a_list_model: G_ARR)
-		deferred
+	make_as_ev_list (a_widget: EV_ITEM_LIST [EV_ITEM]; a_model_getter_agent: like model_getter_agent; a_list_model: ARRAYED_LIST [STRING])
+		do
+			make_with_widget (a_widget, agent on_list_load, agent a_widget.linear_representation)
+			set_model_getter_agent (a_model_getter_agent)
+			set_model_setter_agent (agent on_items_setting (a_list_model, ?))
+			set_model_to_view_data_converter_agent (agent on_convert_strings_to_list_items)
+			set_view_to_model_data_converter_agent (agent on_convert_list_items_to_strings)
 		end
 
 feature -- Events
 
-	on_list_load (a_items: G_LIN)
-		deferred
+	on_list_load (a_items: LINEAR [EV_LIST_ITEM])
+		do
+			from
+				a_items.start
+			until
+				a_items.off
+			loop
+				check has_widget: attached widget as al_widget then
+					al_widget.extend (a_items.item_for_iteration)
+				end
+				a_items.forth
+			end
 		end
 
-	on_items_setting (a_items: G_ARR; a_list: G_ARR)
+	on_items_setting (a_items: ARRAYED_LIST [STRING]; a_list: ARRAYED_LIST [STRING])
 			-- Settings `a_list' of items back into `a_items', post wipe_out.
 		note
 			warning: "[
@@ -82,15 +73,36 @@ feature -- Events
 				these conditions demand that the target Model-list be destroyed
 				first by a call to wipe_out, and then the View-list items added.
 				]"
-		deferred
+		do
+			a_items.wipe_out
+			a_items.fill (a_list)
 		end
 
-	on_convert_strings_to_list_items (a_strings: G_ARR): G_LIN
-		deferred
+	on_convert_strings_to_list_items (a_strings: ARRAYED_LIST [STRING]): LINEAR [EV_LIST_ITEM]
+		local
+			l_result: ARRAYED_LIST [EV_LIST_ITEM]
+		do
+			create l_result.make (a_strings.count)
+			across
+				a_strings as ic
+			loop
+				l_result.force (create {EV_LIST_ITEM}.make_with_text (ic.item))
+			end
+			Result := l_result.linear_representation
 		end
 
-	on_convert_list_items_to_strings (a_items: G_LIN): G_ARR
-		deferred
+	on_convert_list_items_to_strings (a_items: LINEAR [EV_LIST_ITEM]): ARRAYED_LIST [STRING]
+		do
+			a_items.finish
+			create Result.make (a_items.index)
+			from
+				a_items.start
+			until
+				a_items.off
+			loop
+				Result.force (a_items.item.text)
+				a_items.forth
+			end
 		end
 
 end
