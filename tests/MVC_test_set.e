@@ -31,6 +31,23 @@ feature -- Test routines
 
 		end
 
+	mvc_list_tests
+		local
+				-- forms of MVC_ITEM_LIST [..]
+			l_mvc_list: MVC_ITEM_LIST
+
+			l_list: EV_LIST
+		do
+			create l_list
+			create items.make_from_array (<<"blah1", "blah2">>)
+			create l_mvc_list.make_with_widget (l_list, agent l_list.extend, agent l_list.linear_representation)
+			create l_mvc_list.make_as_ev_list (l_list, agent items, agent items.fill)
+			l_mvc_list.model_to_view
+--			l_mvc_list.view_to_model
+		end
+
+	items: ARRAYED_LIST [STRING] attribute create Result.make (2) end
+
 	mvc_basic_textable_tests
 			-- `mvc_textable_tests'
 		local
